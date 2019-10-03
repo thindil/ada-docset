@@ -21,8 +21,17 @@
 
 """Build Ada 2012 specification docset from the HTML version of it."""
 
+import os.path
 import re
 import sqlite3
+import urllib.request
+
+# Check if archive with Ada specification exists. If not, download it.
+if not os.path.exists("RM-12_w_TC1-Html.zip"):
+    print("Downloading Ada specification, please wait.")
+    urllib.request.urlretrieve("http://www.ada-auth.org/standards/rm12_w_tc1/RM-12_w_TC1-Html.zip",
+                               "RM-12_w_TC1-Html.zip")
+    print("Download complete.")
 
 CONN = sqlite3.connect('Ada.docset/Contents/Resources/docSet.dsidx')
 CUR = CONN.cursor()
