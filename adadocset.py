@@ -32,15 +32,15 @@ CUR.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TE
 # Packages, Types, Subprograms, Objects
 FILENAMES = ["RM-Q-1.html", "RM-Q-2.html", "RM-Q-3.html", "RM-Q-4.html", "RM-Q-5.html"]
 TYPES = ["Package", "Type", "Function", "Exception", "Object"]
-for j in range(len(FILENAMES)):
-    with open("Ada.docset/Contents/Resources/Documents/" + FILENAMES[j]) as fn:
+for j, filename in enumerate(FILENAMES):
+    with open("Ada.docset/Contents/Resources/Documents/" + filename) as fn:
         content = fn.readlines()
     i = 0
     while i < len(content):
         line = content[i].strip()
         if line.startswith("<div class=\"Index\">"):
             line = line[19: ]
-            result = re.search("^\w+", line)
+            result = re.search(r"^\w+", line)
             name = line[ :result.span()[1]]
             while line.find("<A HREF=") == -1:
                 i += 1
@@ -62,7 +62,7 @@ while i < len(CONTENT):
             LINE += CONTENT[i].strip()
             i += 1
         LINE += CONTENT[i].strip()
-        RESULT = re.search(">\w+(\[|\(|;)", LINE)
+        RESULT = re.search(r">\w+(\[|\(|;)", LINE)
         NAME = LINE[RESULT.span()[0] + 1 : RESULT.span()[1] - 1]
         LINE = LINE[LINE.find("See <A HREF=") + 13:]
         PATH = LINE[:LINE.find("\"")]
@@ -73,8 +73,8 @@ while i < len(CONTENT):
 #Aspects and Attributes
 FILENAMES = ["RM-K-1.html", "RM-K-2.html"]
 TYPES = ["Property", "Attribute"]
-for j in range(len(FILENAMES)):
-    with open("Ada.docset/Contents/Resources/Documents/" + FILENAMES[j]) as fn:
+for j, filename in enumerate(FILENAMES):
+    with open("Ada.docset/Contents/Resources/Documents/" + filename) as fn:
         content = fn.readlines()
     i = 0
     while i < len(content):
