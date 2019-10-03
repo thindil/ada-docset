@@ -25,13 +25,20 @@ import os.path
 import re
 import sqlite3
 import urllib.request
+import zipfile
 
 # Check if archive with Ada specification exists. If not, download it.
 if not os.path.exists("RM-12_w_TC1-Html.zip"):
-    print("Downloading Ada specification, please wait.")
+    print("Downloading Ada specification, please wait...", end = "")
     urllib.request.urlretrieve("http://www.ada-auth.org/standards/rm12_w_tc1/RM-12_w_TC1-Html.zip",
                                "RM-12_w_TC1-Html.zip")
-    print("Download complete.")
+    print("done.")
+
+# Exctract Ada specification to the proper directory
+with zipfile.ZipFile("RM-12_w_TC1-Html.zip", "r") as zip_ref:
+    print("Extracting Ada specification...",  end = "")
+    zip_ref.extractall("Ada.docset/Contents/Resources/Documents")
+    print("done.")
 
 CONN = sqlite3.connect('Ada.docset/Contents/Resources/docSet.dsidx')
 CUR = CONN.cursor()
