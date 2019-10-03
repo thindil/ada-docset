@@ -40,12 +40,17 @@ with zipfile.ZipFile("RM-12_w_TC1-Html.zip", "r") as zip_ref:
     zip_ref.extractall("Ada.docset/Contents/Resources/Documents")
     print("done.")
 
+print("Creating sqlite database for docset:")
 CONN = sqlite3.connect('Ada.docset/Contents/Resources/docSet.dsidx')
 CUR = CONN.cursor()
-CUR.execute('DROP TABLE searchIndex;')
+try:
+    CUR.execute('DROP TABLE searchIndex;')
+except sqlite3.OperationalError:
+    pass
 CUR.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TEXT, path TEXT);')
 
 # Packages, Types, Subprograms, Objects
+print("Adding packages, types, subprograms, objects...", end = "")
 FILENAMES = ["RM-Q-1.html", "RM-Q-2.html", "RM-Q-3.html", "RM-Q-4.html", "RM-Q-5.html"]
 TYPES = ["Package", "Type", "Function", "Exception", "Object"]
 for j, filename in enumerate(FILENAMES):
@@ -66,8 +71,10 @@ for j, filename in enumerate(FILENAMES):
             CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                         (name, TYPES[j], path))
         i += 1
+print("done.")
 
 #Pragmas
+print("Adding pragmas...", end = "")
 with open("Ada.docset/Contents/Resources/Documents/RM-L.html") as fn:
     CONTENT = fn.readlines()
 i = 0
@@ -85,8 +92,10 @@ while i < len(CONTENT):
         CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                     (NAME, "Directive", PATH))
     i += 1
+print("done.")
 
 #Aspects and Attributes
+print("Adding aspects and attributes...", end = "")
 FILENAMES = ["RM-K-1.html", "RM-K-2.html"]
 TYPES = ["Property", "Attribute"]
 for j, filename in enumerate(FILENAMES):
@@ -107,8 +116,10 @@ for j, filename in enumerate(FILENAMES):
             CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                         (name, TYPES[j], path))
         i += 1
+print ("done.")
 
 # Chapters
+print("Adding specification chapters...", end = "")
 with open("Ada.docset/Contents/Resources/Documents/RM-TOC.html") as fn:
     CONTENT = fn.readlines()
 i = 0
@@ -124,6 +135,8 @@ while i < len(CONTENT):
         CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                     (NAME, "Section", PATH))
     i += 1
+print("done.")
 
 CONN.commit()
 CONN.close()
+print("Creating sqlite database for docset was finished.")
