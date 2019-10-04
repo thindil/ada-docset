@@ -23,6 +23,7 @@
 
 import os.path
 import re
+from shutil import copy2
 import sqlite3
 import urllib.request
 import zipfile
@@ -34,11 +35,18 @@ if not os.path.exists("RM-12_w_TC1-Html.zip"):
                                "RM-12_w_TC1-Html.zip")
     print("done.")
 
-# Exctract Ada specification to the proper directory
+# Extract Ada specification to the proper directory
 with zipfile.ZipFile("RM-12_w_TC1-Html.zip", "r") as zip_ref:
     print("Extracting Ada specification...",  end = "")
     zip_ref.extractall("Ada.docset/Contents/Resources/Documents")
     print("done.")
+
+# Copy icons and docset specification
+print("Copying icons and docset specification...", end = "")
+copy2("icon.png", "Ada.docset")
+copy2("icon@2x.png", "Ada.docset")
+copy2("docset.json", "Ada.docset")
+print("done.")
 
 print("Creating sqlite database for docset:")
 CONN = sqlite3.connect('Ada.docset/Contents/Resources/docSet.dsidx')
@@ -116,7 +124,7 @@ for j, filename in enumerate(FILENAMES):
             CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                         (name, TYPES[j], path))
         i += 1
-print ("done.")
+print("done.")
 
 # Chapters
 print("Adding specification chapters...", end = "")
