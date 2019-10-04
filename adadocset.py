@@ -74,10 +74,25 @@ for j, filename in enumerate(FILENAMES):
             while line.find("<A HREF=") == -1:
                 i += 1
                 line = content[i].strip()
-            line = line[line.find("<A HREF=") + 9:]
-            path = line[:line.find("\"")]
-            CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
-                        (name, TYPES[j], path))
+            while line.find("<A HREF=") > -1:
+                line = line[line.find("<A HREF=") + 9:]
+                path = line[:line.find("\"")]
+                CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
+                            (name, TYPES[j], path))
+            if j == 2 and line[-6: ] != "</div>":
+                while i < len(content):
+                    i += 1
+                    line = content[i].strip()
+                    while line.find("<A HREF=") == -1:
+                        i += 1
+                        line = content[i].strip()
+                    while line.find("<A HREF=") > -1:
+                        line = line[line.find("<A HREF=") + 9:]
+                        path = line[:line.find("\"")]
+                        CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
+                                    (name, TYPES[j], path))
+                    if line.find("</div>") != -1:
+                        break
         i += 1
 print("done.")
 
