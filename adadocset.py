@@ -30,19 +30,19 @@ import zipfile
 
 # Check if archive with Ada specification exists. If not, download it.
 if not os.path.exists("RM-12_w_TC1-Html.zip"):
-    print("Downloading Ada specification, please wait...", end = "")
+    print("Downloading Ada specification, please wait...", end="")
     urllib.request.urlretrieve("http://www.ada-auth.org/standards/rm12_w_tc1/RM-12_w_TC1-Html.zip",
                                "RM-12_w_TC1-Html.zip")
     print("done.")
 
 # Extract Ada specification to the proper directory
 with zipfile.ZipFile("RM-12_w_TC1-Html.zip", "r") as zip_ref:
-    print("Extracting Ada specification...",  end = "")
+    print("Extracting Ada specification...", end="")
     zip_ref.extractall("Ada.docset/Contents/Resources/Documents")
     print("done.")
 
 # Copy icons and docset specification
-print("Copying icons and docset specification...", end = "")
+print("Copying icons and docset specification...", end="")
 copy2("icon.png", "Ada.docset")
 copy2("icon@2x.png", "Ada.docset")
 copy2("docset.json", "Ada.docset")
@@ -58,7 +58,7 @@ except sqlite3.OperationalError:
 CUR.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TEXT, path TEXT);')
 
 # Packages, Types, Subprograms, Objects
-print("Adding packages, types, subprograms, objects...", end = "")
+print("Adding packages, types, subprograms, objects...", end="")
 FILENAMES = ["RM-Q-1.html", "RM-Q-2.html", "RM-Q-3.html", "RM-Q-4.html", "RM-Q-5.html"]
 TYPES = ["Package", "Type", "Function", "Exception", "Object"]
 for j, filename in enumerate(FILENAMES):
@@ -82,7 +82,7 @@ for j, filename in enumerate(FILENAMES):
 print("done.")
 
 #Pragmas
-print("Adding pragmas...", end = "")
+print("Adding pragmas...", end="")
 with open("Ada.docset/Contents/Resources/Documents/RM-L.html") as fn:
     CONTENT = fn.readlines()
 i = 0
@@ -103,7 +103,7 @@ while i < len(CONTENT):
 print("done.")
 
 #Aspects and Attributes
-print("Adding aspects and attributes...", end = "")
+print("Adding aspects and attributes...", end="")
 FILENAMES = ["RM-K-1.html", "RM-K-2.html"]
 TYPES = ["Property", "Attribute"]
 for j, filename in enumerate(FILENAMES):
@@ -127,7 +127,7 @@ for j, filename in enumerate(FILENAMES):
 print("done.")
 
 # Chapters
-print("Adding specification chapters...", end = "")
+print("Adding specification chapters...", end="")
 with open("Ada.docset/Contents/Resources/Documents/RM-TOC.html") as fn:
     CONTENT = fn.readlines()
 i = 0
