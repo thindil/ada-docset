@@ -46,6 +46,7 @@ print("Copying icons and docset specification...", end="")
 copy2("icon.png", "Ada.docset")
 copy2("icon@2x.png", "Ada.docset")
 copy2("docset.json", "Ada.docset")
+copy2("Info.plist", "Ada.docset/Contents")
 print("done.")
 
 print("Creating sqlite database for docset:")
