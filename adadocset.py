@@ -30,24 +30,24 @@ import zipfile
 
 # Check if archive with Ada specification exists. If not, download it.
 if not os.path.exists("RM-12_w_TC1-Html.zip"):
-    print("Downloading Ada specification, please wait...", end="")
+    print("Downloading Ada specification, please wait...")
     urllib.request.urlretrieve("http://www.ada-auth.org/standards/rm12_w_tc1/RM-12_w_TC1-Html.zip",
                                "RM-12_w_TC1-Html.zip")
-    print("done.")
+    print("Downloaded.")
 
 # Extract Ada specification to the proper directory
 with zipfile.ZipFile("RM-12_w_TC1-Html.zip", "r") as zip_ref:
-    print("Extracting Ada specification...", end="")
+    print("Extracting Ada specification...")
     zip_ref.extractall("Ada.docset/Contents/Resources/Documents")
-    print("done.")
+    print("Extracted.")
 
 # Copy icons and docset specification
-print("Copying icons and docset specification...", end="")
+print("Copying icons and docset specification...")
 copy2("icon.png", "Ada.docset")
 copy2("icon@2x.png", "Ada.docset")
 copy2("docset.json", "Ada.docset")
 copy2("Info.plist", "Ada.docset/Contents")
-print("done.")
+print("Copied.")
 
 print("Creating sqlite database for docset:")
 CONN = sqlite3.connect('Ada.docset/Contents/Resources/docSet.dsidx')
@@ -59,7 +59,7 @@ except sqlite3.OperationalError:
 CUR.execute('CREATE TABLE searchIndex(id INTEGER PRIMARY KEY, name TEXT, type TEXT, path TEXT);')
 
 # Packages, Types, Subprograms, Objects
-print("Adding packages, types, subprograms, objects...", end="")
+print("Adding packages, types, subprograms, objects...")
 FILENAMES = ["RM-Q-1.html", "RM-Q-2.html", "RM-Q-3.html", "RM-Q-4.html", "RM-Q-5.html"]
 TYPES = ["Package", "Type", "Function", "Exception", "Object"]
 for j, filename in enumerate(FILENAMES):
@@ -95,10 +95,10 @@ for j, filename in enumerate(FILENAMES):
                     if line.find("</div>") != -1:
                         break
         i += 1
-print("done.")
+print("Added.")
 
 #Pragmas
-print("Adding pragmas...", end="")
+print("Adding pragmas...")
 with open("Ada.docset/Contents/Resources/Documents/RM-L.html") as fn:
     CONTENT = fn.readlines()
 i = 0
@@ -116,10 +116,10 @@ while i < len(CONTENT):
         CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                     (NAME, "Directive", PATH))
     i += 1
-print("done.")
+print("Added.")
 
 #Aspects and Attributes
-print("Adding aspects and attributes...", end="")
+print("Adding aspects and attributes...")
 FILENAMES = ["RM-K-1.html", "RM-K-2.html"]
 TYPES = ["Property", "Attribute"]
 for j, filename in enumerate(FILENAMES):
@@ -140,10 +140,10 @@ for j, filename in enumerate(FILENAMES):
             CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                         (name, TYPES[j], path))
         i += 1
-print("done.")
+print("Added.")
 
 # Chapters
-print("Adding specification chapters...", end="")
+print("Adding specification chapters...")
 with open("Ada.docset/Contents/Resources/Documents/RM-TOC.html") as fn:
     CONTENT = fn.readlines()
 i = 0
@@ -159,7 +159,7 @@ while i < len(CONTENT):
         CUR.execute('INSERT OR IGNORE INTO searchIndex(name, type, path) VALUES (?,?,?)',
                     (NAME, "Section", PATH))
     i += 1
-print("done.")
+print("Added.")
 
 CONN.commit()
 CONN.close()
