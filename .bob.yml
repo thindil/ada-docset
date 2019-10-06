@@ -1,0 +1,10 @@
+- command:
+   name: compress
+   execute:
+      - tar -czf Ada.tgz Ada.docset
+   description: Compress docset with Tar
+- command:
+   name: build
+   execute:
+      - ./adadocset.py
+   description: Generate Ada specification docset
