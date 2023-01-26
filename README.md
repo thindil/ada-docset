@@ -1,3 +1,5 @@
+**INFO:** This project is no longer maintained. Feel free to clone it and take care about it.
+
 Ada 2012 Standard Docset
 =======================
 
